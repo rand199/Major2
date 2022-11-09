@@ -14,7 +14,7 @@
 
 	int main(int argc, char *argv[]){
 		while(1){
-            printf("minor3> ");
+            printf("major2> ");
             getline(&input, &buffer, stdin);
             	if(strcmp(input,"\n")==0){
 					printf("Please type in a command\n" );
