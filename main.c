@@ -409,28 +409,31 @@ void InteractiveMode() {
 
 void MyCD(char* dir_input, int arg_count) {
 
-	if (arg_count == 1)
+	
+    //if no arguments are passed. Go to home directory
+	if (arg_count == 1) 
 	{
 		if (chdir("/nfs/home") != 0) {
 			fprintf(stderr, "error with chdir() to %s failed", dir_input);
 			perror("");
 		}
-
+    //target directory is passed
 	}
 	else if (arg_count == 2)
-	{
-		if (chdir(dir_input) != 0)
+	{   //
+		if (chdir(dir_input) != 0)  //error message  if directory is not found
 		{
 			fprintf(stderr, "error with chdir() to %s failed, ", dir_input);
 			perror("");
 		}
 	}
-	else if (arg_count > 2)
+	else if (arg_count > 2) //error message if more than two arguments are passed
 	{
 		printf("Too many arguments\n");
 	}
-	else
+	else    //error message to avoid program crashing
 		printf("Something went wrong\n");
+
 
 }
 
