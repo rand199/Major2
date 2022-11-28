@@ -408,50 +408,30 @@ void InteractiveMode() {
 }
 
 void MyCD(char* dir_input, int arg_count) {
-	
-	   // printf(dir_input);
-    //printf(arg_count);
-    
-    char tempPath[MAX];
-char tempCurDir[MAX];
 
-//  'target' contains an absolute address
-//   ex: /var/lib
+	if (arg_count == 1)
+	{
+		if (chdir("/nfs/home") != 0) {
+			fprintf(stderr, "error with chdir() to %s failed", dir_input);
+			perror("");
+		}
 
-if (dir_input[0] == '/')
-strcpy(tempPath, dir_input);
+	}
+	else if (arg_count == 2)
+	{
+		if (chdir(dir_input) != 0)
+		{
+			fprintf(stderr, "error with chdir() to %s failed", dir_input);
+			perror("");
+		}
+	}
+	else if (arg_count > 2)
+	{
+		printf("Too many arguments");
+	}
+	else
+		printf("Something went wrong");
 
-
-//  'target' contains a relative address
-//  ex: foo/bar
-
-else
-{
-strcpy(tempPath, CURRENT_DIRECTORY);
-strcat(tempPath, "/");
-strcat(tempPath, dir_input);
-}
-
-// check for the new path
-
-if (realpath(tempPath, tempCurDir) == NULL)
-  {
-  fprintf(stderr, "%s: cd: '%s': %s\n", prompt, tempPath, strerror(errno));
-return;
-  }
-
-else
-  {
-    if (chdir(tempCurDir) == -1)
-    {
-    perror("chdir");
-    return;
-    }
-
-    strcpy(CURRENT_DIRECTORY, tempCurDir);
-  }
-     
-     
 }
 
 void MyExit() { // printf free malloc (IGNORE: For highlighting puposes) 
