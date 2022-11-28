@@ -411,6 +411,7 @@ void MyCD(char* dir_input, int arg_count) {
 }
 
 void MyExit() { // printf free malloc (IGNORE: For highlighting puposes) 
+	exit(EXIT_SUCCESS);
 }
 
 void MyPath(char* args[], int arg_count) {
