@@ -421,16 +421,16 @@ void MyCD(char* dir_input, int arg_count) {
 	{
 		if (chdir(dir_input) != 0)
 		{
-			fprintf(stderr, "error with chdir() to %s failed", dir_input);
+			fprintf(stderr, "error with chdir() to %s failed, ", dir_input);
 			perror("");
 		}
 	}
 	else if (arg_count > 2)
 	{
-		printf("Too many arguments");
+		printf("Too many arguments\n");
 	}
 	else
-		printf("Something went wrong");
+		printf("Something went wrong\n");
 
 }
 
