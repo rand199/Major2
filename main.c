@@ -510,6 +510,35 @@ void signalHandle(int sig) {
 
 void io_redirect(char* command, char* full_line) {
 
+	
+  char *buffer = NULL;
+    const char *filename = NULL;
+    struct stat sb;
+
+    if (command != 2) {
+        printf("Usage: ./program filename < filename\n");
+    }
+
+    filename = full_line[1];
+
+    if (stat(filename, &sb) == -1) {
+        perror("stat");
+    }
+//error
+    buffer = malloc(sb.st_size);
+    if (!buffer) {
+        perror("malloc");
+    }
+
+    //input
+    if (fgets(buffer, sb.st_size , stdin) == NULL) {
+        perror("fgets");
+      return;
+    }
+    printf("%s\n", buffer);
+
+
+	
 }
 void MyAlias(char* args[], int arg_count) {
 
