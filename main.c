@@ -450,7 +450,28 @@ void MyHistory(char* args[], int arg_count) {
 }
 
 void PipeCommands(char* args[], char* first_command, int arg_count) {
+     int i;
 
+    for( i=1; i<arg_count-1; i++)
+    {
+        int pd[2];
+        pipe(pd);
+
+        if (!fork()) {
+            dup2(pd[1], 1); // remap output back to parent
+            execlp(args[i], args[i], NULL);
+            perror("exec");
+            abort();
+        }
+
+        // remap output from previous child to input
+        dup2(pd[0], 0);
+        close(pd[1]);
+    }
+
+    execlp(args[i], args[i], NULL);
+    perror("exec");
+    abort();
 }
 
 void signalHandle(int sig) {
