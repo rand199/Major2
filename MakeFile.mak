@@ -1,14 +1,14 @@
 
-all: Major2
+all: major2
 
 Major2: 
 gcc major2.c -o main.o
 
 Interactive Mode:
-./main.o
+./major2.o
 
 Batch Mode:
-./main.o batchfile.txt
+./major2.o batchfile.txt
 
 clean:  
-rm main.o
+rm major2.o
