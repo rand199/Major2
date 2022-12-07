@@ -414,6 +414,7 @@ void MyHistory(char* args[], int arg_count) {
 	        printf("%d : %s\n", i+1, MYHISTORY[i]);
 	    }
     } 
+	// Clears items in MyHistory 
     else if ((strcmp(args[0], "-c") == 0) && (arg_count == 1))
     {
 	    for (int i = 0; i < hist_count; i++) {
@@ -422,6 +423,7 @@ void MyHistory(char* args[], int arg_count) {
 	        printf("%s\n", "Shell Command History has been cleared");
 	   }
     }
+	//If a specific number is called will print the name of the command that is represented by that number in the MyHistory array and will execute.
     else if ((strcmp(args[0], "-e") == 0) && (arg_count == 2))
     {
 		if ((atoi(args[1]) > 0)&&((atoi(args[1]) <= hist_count)))
@@ -433,7 +435,7 @@ void MyHistory(char* args[], int arg_count) {
 		    //free temp
 		    free(temp);
 		}
-		else
+		else //if the number called does not exist in MyHistory, there can be no execution of the command
 		{
 		    printf("Invalid history number!\n");
 		}
