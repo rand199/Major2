@@ -1,14 +1,6 @@
-
-all: major2
-
-Major2: 
-gcc major2.c -o major2.o
-
-Interactive Mode:
-./major2.o
-
-Batch Mode:
-./major2.o batchfile.txt
-
-clean:  
-rm major2.o
+major2: major2.o
+  gcc major2.o -o major2
+major1.o: major2.c major2.h
+  gcc -c -Wall major1.c -lm
+clean:
+  rm -f *.o major2
