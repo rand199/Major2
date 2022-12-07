@@ -358,35 +358,30 @@ void MyExit() { // printf free malloc (IGNORE: For highlighting puposes)
 }
 
 void MyPath(char* args[], int arg_count) {
-	/*
-	//initialize your shell's enviroment
-	MYPATH = (char*)malloc(1024);
-	memset(MYPATH, '\0', sizeof(MYPATH));
-	ORIG_PATH_VAR = getenv("PATH"); // needs to include <stdlib.h>
-	//save the original PATH, which is recovered on exit
-	strcpy(MYPATH, ORIG_PATH_VAR);
-	//make my own PATH, namely MYPATH
-	setenv("MYPATH", MYPATH, 1);
-	*/
+
 	int argCount = arg_count--; //path + bin is 3-1=2. 
 	int index = argCount--; //args[max] = index which is 2-1=1. 
-	if (argCount == 0)
+	if (argCount == 0) //if there are no arguments
 	{
-		printf("%s\n",MYPATH);
-		//printf("%s\n",ORIG_PATH_VAR);
+		char* newPath = getenv("PATH"); //get path and store it in 'newPath'
+		printf("%s\n",newPath); //print the path
 	}
-	else if ((strcmp(args[0], "+") == 0) && (argCount == 2))
+	else if ((strcmp(args[0], "+") == 0) && (argCount == 2)) //else if there is 1 argument with a plus
 	{
-		strcat(MYPATH, ":");
-		strcat(MYPATH, args[1]);
-		//setenv("PATH", MYPATH, 1);
-		printf("original = %s\n", ORIG_PATH_VAR);
-		printf("mypath = %s\n", MYPATH);
+		strcat(MYPATH, ":"); //add ':' between paths
+		strcat(MYPATH, args[1]); //add the path entered by the user
+		setenv("PATH", MYPATH, 1); //set the path
+		char* newPath = getenv("PATH"); //get path and store it in 'newPath' 
+		printf("mypath = %s\n",newPath); //print path
 	}
-	else if ((strcmp(args[0], "-") == 0) && (argCount == 2))
+	else if ((strcmp(args[0], "-") == 0) && (argCount == 2)) //else if there is 1 argument with a minus
 	{
-		char* str = MYPATH;
-		char* sub = args[1];
+		char* sub; //variable for substring
+		sub = (char*)malloc(1024); //assign memory
+		strcpy(sub, ":"); //add ':' to substring
+		strcat(sub, args[1]); //add path added by user to substring
+		char* str = getenv("PATH"); //get the path and store it in str
+		//code below is to remove a substring for the whole string
 		char* p, * q, * r;
 		if (*sub && (q = r = strstr(str, sub)) != NULL)
 		{
@@ -399,13 +394,13 @@ void MyPath(char* args[], int arg_count) {
 			memmove(q, p, strlen(p) + 1);
 		}
 
-		//setenv("PATH", str, 1);
-		printf("original = %s\n", ORIG_PATH_VAR);
-		printf("mypath = %s\n", MYPATH);
+		setenv("PATH", str, 1); //set new path
+		char* newPath = getenv("PATH"); //get path
+		printf("mypath = %s\n", newPath); //print path
 	}
-	else if (argCount >= 3)
+	else if (argCount >= 3) //if there are too many arguments, its an error
 		printf("Error! too many arguments, this command has this format below.\npath(without arguments) displays the pathnames currently set\npath + ./bin appends the pathname to the path variable. Only one pathname may be added at a time\npath -./ bin removes the pathname to the path variable. Only one pathname may be removed at a time\n");
-	else
+	else //any other error
 		printf("Error! Wrong input, this command has this format below.\npath(without arguments) displays the pathnames currently set\npath + ./bin appends the pathname to the path variable. Only one pathname may be added at a time\npath -./ bin removes the pathname to the path variable. Only one pathname may be removed at a time\n");
 
 }
