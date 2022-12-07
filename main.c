@@ -1,86 +1,3 @@
-
-/*
-//major2
-#include <stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<unistd.h>
-#include<sys/wait.h>
-#define command 50     //50 characters max received per command 
-
-
-int main()
-{
-	char input[50];           //create string to store command 
-	char* line;    //pointer to constant 
-
-	char* args[command];   //a max of 50 arguments
-	int count = 0, pid, i;
-	
-	printf("major2> ");     //initial print line to ask user for a command
-	fgets(input, 100, stdin);      //read a line from a string
-
- 
-    
-	while (strcmp(input, "quit\n"))  //string comparison to continue with loop
-        {                                //while user does not input the command "quit"
-
-		printf("minor3> ");      //ask for command
-
-		count = 0;
-
-		input[strlen(input) - 1] = '\0';    //string length
-
-		for (i = 0; i < 10; i++)
-		{
-			args[i] = (char*)malloc(20 * sizeof(char)); //memory allocation
-		}
-
-		
-
-		line = strtok(input, " ");   //tokenize string adn separate it when space is found
-
-		strcpy(args[count++], line);   //copy every susbstring
-
- 
-		while (line != "quit")   //do until string is empty
-		{
-			line = strtok(NULL, " ");
-			if (line == NULL)
-				break;
-			
-			strcpy(args[count++], line);
-		}
-
-		//after building list of commands , execute command using execvp , for that create child process
-
-		args[count] = NULL;
-		pid = fork();   //return value of fork()
-
-
-	
-		if(pid == 0) // child process
-            {
-                execvp(args[0], args);      //output if wrong command
-                printf("%s: Command not found\n", args[0]);
-                break;
-            }
-                else if (pid > 0) { // parent process
-                int status;
-                waitpid(-1, &status, 0); 
-            } else {
-                printf("Error: fork() failed!\n");
-            }
-		
-		
-		
-		fgets(input, 100, stdin); //store string until a new command is given
-	}
-
-}
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -447,10 +364,8 @@ void MyPath(char* args[], int arg_count) {
 	MYPATH = (char*)malloc(1024);
 	memset(MYPATH, '\0', sizeof(MYPATH));
 	ORIG_PATH_VAR = getenv("PATH"); // needs to include <stdlib.h>
-
 	//save the original PATH, which is recovered on exit
 	strcpy(MYPATH, ORIG_PATH_VAR);
-
 	//make my own PATH, namely MYPATH
 	setenv("MYPATH", MYPATH, 1);
 	*/
@@ -497,7 +412,42 @@ void MyPath(char* args[], int arg_count) {
 }
 
 void MyHistory(char* args[], int arg_count) {
-
+    int argCount = arg_count--;
+    if (arg_count == 0)
+    {
+        printf("%s\n", "\nShell Command History: ");
+	    for (int i = 0; i < hist_count; i++) {
+	        printf("%d : %s\n", i+1, MYHISTORY[i]);
+	    }
+    } 
+    else if ((strcmp(args[0], "-c") == 0) && (arg_count == 1))
+    {
+	    for (int i = 0; i < hist_count; i++) {
+    	    MYHISTORY[i] = "";
+	        hist_count = 0;
+	        printf("%s\n", "Shell Command History has been cleared");
+	   }
+    }
+    else if ((strcmp(args[0], "-e") == 0) && (arg_count == 2))
+    {
+		if ((atoi(args[1]) > 0)&&((atoi(args[1]) <= hist_count)))
+		{
+		    printf("Commmand to run : %s\n", MYHISTORY[atoi(args[1])-1]);
+		    char* temp = strdup(MYHISTORY[atoi(args[1])]); //for example: ls -a -l
+		    temp = strtok(temp, " "); //get the command
+		    ExecuteCommands(temp, MYHISTORY[atoi(args[1])-1]);
+		    //free temp
+		    free(temp);
+		}
+		else
+		{
+		    printf("Invalid history number!\n");
+		}
+    }
+    else
+    {
+        printf("Invalid parameter(s) or parameter count\n");
+    }
 }
 
 void PipeCommands(char* args[], char* first_command, int arg_count) {
@@ -509,9 +459,8 @@ void signalHandle(int sig) {
 }
 
 void io_redirect(char* command, char* full_line) {
-
-	
-  char *buffer = NULL;
+  /*  
+char *buffer = NULL;
     const char *filename = NULL;
     struct stat sb;
 
@@ -536,10 +485,41 @@ void io_redirect(char* command, char* full_line) {
       return;
     }
     printf("%s\n", buffer);
-
-
-	
+*/
 }
 void MyAlias(char* args[], int arg_count) {
+    
+    int argCount = arg_count--;
+    //if alias array is empty
+    if (MYALIAS[0] == NULL) 
+        {
+            printf("No aliases to display \n");
+        }
+    //prints current list of alias commands
+    else if (arg_count == 0){
+        printf("%s\n", "\nCurrent alias commands in place: ");
+	    for (int i = 0; i < alias_count; i++) {
+	        printf("%d : %s\n", i+1, MYALIAS[i]);
+	    }
+    } 
+    //remove all cases in alias
+    else if ((strcmp(args[0], "-c") == 0) && (arg_count == 1))
+    {
+	    for (int i = 0; i < alias_count; i++) {
+    	    MYALIAS[i] = "";
+	        alias_count = 0;
+	        printf("%s\n", "Alias Commands have been cleared");
+	   }
+    }
+   else if ((strcmp(args[0], "-r") == 0) && (arg_count == 2))
+    {
+    	    
+	        //alias_count = 0;
+	        printf("%s\n", "Alias Command has been deleted");
+	   
+    }
+    
 
 }
+
+
