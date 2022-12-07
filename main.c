@@ -32,8 +32,7 @@ void CommandRedirect(char* args[], char* first_command, int arg_count, char* ful
 void PipeCommands(char* args[], char* first_command, int arg_count);
 void signalHandle(int sig);
 void MyAlias(char* args[], int arg_count);
-void io_redirect(char* command, char* full_line);
-
+void io_redirect(char* filename);
 char CURRENT_DIRECTORY[MAX]; //current directory
 char* COMMANDS[MAX]; //commands to be executed
 char* MYHISTORY[MAX]; //shell command history
@@ -244,7 +243,7 @@ void CommandRedirect(char* args[], char* first_command, int arg_count, char* ful
 	}
 	//if full_line contains "<" or ">", then io_redirect() is called
 	else if (strchr(full_line, '<') != NULL || strchr(full_line, '>') != NULL) {
-	io_redirect(first_command, full_line);
+	void io_redirect(char* filename);
 	}
 	//if full_line contains "|", then PipeCommands() is called
 	else if (strchr(full_line, '|') != NULL) {
@@ -458,35 +457,36 @@ void signalHandle(int sig) {
 
 }
 
-void io_redirect(char* command, char* full_line) {
-  /*  
-char *buffer = NULL;
-    const char *filename = NULL;
-    struct stat sb;
 
-    if (command != 2) {
-        printf("Usage: ./program filename < filename\n");
-    }
+void io_redirect(char* filename) {
+  // Check if filename is NULL
+  if (!filename) {
+    printf("Usage: ./program filename < filename\n");
+    return;
+  }
 
-    filename = full_line[1];
+  // Open file for reading
+  FILE *fp = fopen(filename, "r");
 
-    if (stat(filename, &sb) == -1) {
-        perror("stat");
-    }
-//error
-    buffer = malloc(sb.st_size);
-    if (!buffer) {
-        perror("malloc");
-    }
+  // Check if fopen() succeeds
+  if (!fp) {
+    perror("fopen");
+    return;
+  }
 
-    //input
-    if (fgets(buffer, sb.st_size , stdin) == NULL) {
-        perror("fgets");
-      return;
-    }
-    printf("%s\n", buffer);
-*/
+  // Redirect standard input to read from file
+  int result = dup2(fileno(fp), STDIN_FILENO);
+
+  // Check if dup2() succeeds
+  if (result == -1) {
+    perror("dup2");
+    return;
+  }
+
+  // Close file
+  fclose(fp);
 }
+
 void MyAlias(char* args[], int arg_count) {
     
     int argCount = arg_count--;
