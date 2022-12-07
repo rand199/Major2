@@ -2,7 +2,7 @@
 all: major2
 
 Major2: 
-gcc major2.c -o main.o
+gcc major2.c -o major2.o
 
 Interactive Mode:
 ./major2.o
