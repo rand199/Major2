@@ -3,7 +3,7 @@
 
 //Daniel Padierna was responsible for the built in command, CD, and the redirection function and being a team memeber.
 
-//Melis Tasatmaz was responsible for adding the MyHistory and Alias functions, and being a team member.
+//Melis T. was responsible for adding the MyHistory and Alias functions, and being a team member.
 
 //Rand Alkassi was responsible for the built-in command exit, the pipelining function and being the Product Owner
 
